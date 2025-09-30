@@ -1,0 +1,52 @@
+.orders-history-container {
+  padding: 20px;
+  height: calc(100vh - 5rem);
+  box-sizing: border-box;
+  background-color: #2c3335;
+}
+
+.orders-history-container h2 {
+  color: #343a40;
+  font-weight: 600;
+}
+
+/* Make the table-responsive container scrollable with fixed height */
+.table-responsive {
+  max-height: calc(100vh - 12rem); /* Adjust based on your header space needs */
+  overflow-y: auto;
+  overflow-x: auto;
+}
+
+.table {
+  margin-top: 20px;
+}
+
+/* Fix the table headers */
+.table th {
+  font-weight: 600;
+  position: sticky;
+  top: 0;
+  background-color: #212529; /* Bootstrap table-dark background */
+  z-index: 10;
+}
+
+.table td {
+  vertical-align: middle;
+}
+
+.badge {
+  font-size: 0.85em;
+  padding: 5px 8px;
+}
+
+@media (max-width: 768px) {
+  .table-responsive {
+    overflow-x: auto;
+    max-height: calc(100vh - 10rem);
+  }
+
+  .table td,
+  .table th {
+    white-space: nowrap;
+  }
+}
