@@ -44,23 +44,29 @@ export const AppContextProvider = (props) => {
   };
 
   useEffect(() => {
+    // Runs once on mount: restores auth from localStorage if present
+    const token = localStorage.getItem("token");
+    const role = localStorage.getItem("role");
+
+    if (token && role) {
+      setAuthData(token, role);
+    }
+  }, []); // only once
+
+  useEffect(() => {
+    // Runs whenever auth changes: fetch data if logged in
     async function loadData() {
-      if (localStorage.getItem("token") && localStorage.getItem("role")) {
-        setAuthData(
-          localStorage.getItem("token"),
-          localStorage.getItem("role")
-        );
+      if (auth.token && auth.role) {
+        const response = await getCategories();
+        setCategories(response.data);
+
+        const itemResponse = await fetchItems();
+        setItems(itemResponse.data);
       }
-
-      const response = await getCategories();
-      setCategories(response.data);
-
-      const itemResponse = await fetchItems();
-      setItems(itemResponse.data);
     }
 
     loadData();
-  }, []);
+  }, [auth]); // 👈 will run again after login
 
   const setAuthData = (token, role) => {
     setAuth({ token, role });

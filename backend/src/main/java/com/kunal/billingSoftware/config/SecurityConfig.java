@@ -32,34 +32,48 @@ public class SecurityConfig {
     private  final AppUserDetailsService appUserDetailsService;
     private final JwtRequestFilter jwtRequestFilter;
 
-//    @Bean
-//    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-//        http.cors(Customizer.withDefaults())
-//                .csrf(AbstractHttpConfigurer::disable)
-//                .authorizeHttpRequests(auth -> auth.requestMatchers("/login", "/encode").permitAll()
-////                        .requestMatchers("/api/v1.0/category", "/api/v1.0/items", "/api/v1.0/orders", "/api/v1.0/payments").hasAnyRole(UserRoles.USER.getValue(), UserRoles.ADMIN.getValue())
-////                        .requestMatchers("/api/v1.0/admin/**").hasRole("ADMIN")
-////                            .requestMatchers("/api/v1.0/admin/**").permitAll()
-////                        .anyRequest().authenticated())
-//                        .anyRequest().permitAll())
-//                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) //Check later Stateless vs Stateful
-//                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
-//
-//        return http.build();
-//    }
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/encode", "/api/v1.0/login", "/api/v1.0/admin/register").permitAll()
-                        .anyRequest().permitAll())  // Keep this as permitAll for now during testing
+                        // Public endpoints (login only)
+                        .requestMatchers("/login", "/encode", "/api/v1.0/login").permitAll()
+
+                        // User + Admin endpoints
+                        .requestMatchers("/api/v1.0/category",
+                                "/api/v1.0/items",
+                                "/api/v1.0/orders",
+                                "/api/v1.0/payments",
+                                "/api/v1.0/payments/create-checkout-session")
+                        .hasAnyAuthority(UserRoles.USER.getValue(), UserRoles.ADMIN.getValue())
+
+                        // Admin-only endpoints (including /admin/register)
+                        .requestMatchers("/api/v1.0/admin/**")
+                        .hasAuthority(UserRoles.ADMIN.getValue())
+
+                        // Everything else must be authenticated
+                        .anyRequest().authenticated()
+                )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
+
+
+//    @Bean
+//    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+//        http.cors(Customizer.withDefaults())
+//                .csrf(AbstractHttpConfigurer::disable)
+//                .authorizeHttpRequests(auth -> auth
+//                        .requestMatchers("/login", "/encode", "/api/v1.0/login", "/api/v1.0/admin/register").permitAll()
+//                        .anyRequest().permitAll())  // Keep this as permitAll for now during testing
+//                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+//                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+//
+//        return http.build();
+//    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {

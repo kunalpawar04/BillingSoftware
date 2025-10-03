@@ -64,8 +64,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         String path = request.getRequestURI();
         if (path.equals("/login") ||
                 path.equals("/encode") ||
-                path.equals("/api/v1.0/login") ||  // Add this
-                path.equals("/api/v1.0/admin/register")) {
+                path.equals("/api/v1.0/login")) { // <-- remove register
             filterChain.doFilter(request, response);
             return;
         }
