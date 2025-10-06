@@ -34,14 +34,14 @@ class UserServiceImplTest {
     @Test
     void getUserRole_shouldReturnRole_whenUserExists() {
         // Arrange
-        String email = "test@example.com";
+        String email = "kp@gmail.com";
         UserEntity userEntity = UserEntity.builder()
                 .email(email)
                 .role("ADMIN")
-                .name("KP")
+                .name("Kunal Pawar")
                 .build();
 
-        when(userRepository.findByEmail("test@example.com")).thenReturn(Optional.of(userEntity));
+        when(userRepository.findByEmail("kp@gmail.com")).thenReturn(Optional.of(userEntity));
 
         // Act
         String role = userService.getUserRole(email);
@@ -50,6 +50,6 @@ class UserServiceImplTest {
         // Assert
 //        assertEquals("ADMIN", role);
         assertThat(role).isEqualTo("ADMIN");
-        verify(userRepository, times(2)).findByEmail(email);
+        verify(userRepository, times(1)).findByEmail(email);
     }
 }
