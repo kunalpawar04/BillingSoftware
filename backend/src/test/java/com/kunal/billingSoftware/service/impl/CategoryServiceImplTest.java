@@ -106,14 +106,13 @@ class CategoryServiceImplTest {
     }
 
     @Test
-    void testDeleteCategory_Success() {
+    void testDeleteCategory_WhenCategoryIdExist_Success() {
         // Arrange
         when(categoryRepository.findByCategoryId(categoryEntity.getCategoryId()))
                 .thenReturn(Optional.of(categoryEntity));
 
         when(fileUploadService.deleteFile(anyString())).thenReturn(true);
         doNothing().when(categoryRepository).deleteById(anyLong());
-
         // Act
         categoryService.delete(categoryEntity.getCategoryId());
 
@@ -128,10 +127,9 @@ class CategoryServiceImplTest {
         String categoryId = "invalid-id";
         when(categoryRepository.findByCategoryId(categoryId)).thenReturn(Optional.empty());
 
-        // Act
+        // Act + Assert
         RuntimeException exception = assertThrows(RuntimeException.class, () -> categoryService.delete(categoryId));
 
-        // Assert
         assertEquals(("Category with ID: " + categoryId + " does not exist"), exception.getMessage());
 
         // Checking if method is never called
