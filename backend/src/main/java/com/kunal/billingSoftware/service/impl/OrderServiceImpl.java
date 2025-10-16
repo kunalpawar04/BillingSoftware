@@ -15,7 +15,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.awt.print.Pageable;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -163,9 +162,5 @@ public class OrderServiceImpl implements OrderService {
                 .stream()
                 .map(orderEntity -> convertToResponse(orderEntity))
                 .collect(Collectors.toList());
-    }
-
-    private boolean verifyStripeSignature(String razorpayOrderId, String razorpayPaymentId, String razorpaySignature) {
-        return true;
     }
 }
