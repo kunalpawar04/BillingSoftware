@@ -7,6 +7,7 @@ import com.stripe.exception.StripeException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/payments")
@@ -18,8 +19,12 @@ public class PaymentController {
 
     @PostMapping("/create-checkout-session")
     @ResponseStatus(HttpStatus.CREATED)
-    public StripeCheckoutResponse createCheckoutSession(@RequestBody PaymentRequest request) throws StripeException {
-        return stripeService.createCheckoutSession(request.getAmount(), request.getCurrency());
+    public StripeCheckoutResponse createCheckoutSession(@RequestBody PaymentRequest request) {
+        try {
+            return stripeService.createCheckoutSession(request.getAmount(), request.getCurrency());
+        } catch (StripeException e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Stripe API error", e);
+        }
     }
 
     @PostMapping("/verify")
