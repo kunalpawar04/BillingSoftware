@@ -43,7 +43,11 @@ public class OrderEntity {
 
     @PrePersist
     protected void onCreate() {
-        this.orderId = "ORD" + System.currentTimeMillis();
-        this.createdAt = LocalDateTime.now();
+        if (this.createdAt == null) { // only set if not already provided
+            this.createdAt = LocalDateTime.now();
+        }
+        if (this.orderId == null) {
+            this.orderId = "ORD" + System.currentTimeMillis();
+        }
     }
 }

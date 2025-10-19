@@ -17,10 +17,10 @@ public interface OrderEntityRepository extends JpaRepository<OrderEntity, Long>,
 
     List<OrderEntity> findAllByOrderByCreatedAtDesc();
 
-    @Query("SELECT SUM(o.grandTotal) FROM OrderEntity o WHERE DATE(o.createdAt) = :date")
+    @Query("SELECT SUM(o.grandTotal) FROM OrderEntity o WHERE CAST(o.createdAt AS date) = :date")
     Double sumSalesByDate(@Param("date") LocalDate date);
 
-    @Query("SELECT COUNT(o) FROM OrderEntity o WHERE DATE(o.createdAt) = :date")
+    @Query("SELECT COUNT(o) FROM OrderEntity o WHERE CAST(o.createdAt AS date) = :date")
     Long countByOrderDate(@Param("date") LocalDate date);
 
     @Query("SELECT o FROM OrderEntity o ORDER BY o.createdAt DESC")
