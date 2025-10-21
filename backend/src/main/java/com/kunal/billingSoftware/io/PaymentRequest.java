@@ -11,5 +11,4 @@ import lombok.NoArgsConstructor;
 public class PaymentRequest {
     private Double amount;
     private String currency;
-
 }
