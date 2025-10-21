@@ -1,6 +1,7 @@
 package com.kunal.billingSoftware.service.impl;
 
 import com.kunal.billingSoftware.entity.CategoryEntity;
+import com.kunal.billingSoftware.exceptions.ResourceNotFoundException;
 import com.kunal.billingSoftware.io.CategoryRequest;
 import com.kunal.billingSoftware.io.CategoryResponse;
 import com.kunal.billingSoftware.repository.CategoryRepository;
@@ -43,7 +44,9 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public void delete(String categoryId) {
-        CategoryEntity category = categoryRepository.findByCategoryId(categoryId).orElseThrow(() -> new RuntimeException("Category with ID: " + categoryId + " does not exist"));
+        CategoryEntity category = categoryRepository.findByCategoryId(categoryId)
+                .orElseThrow(() -> new ResourceNotFoundException("Category", "id", categoryId));
+
         fileUploadService.deleteFile(category.getImageUrl());
         categoryRepository.deleteById(category.getId());
     }

@@ -1,12 +1,13 @@
 package com.kunal.billingSoftware.controller;
 
+import com.kunal.billingSoftware.exceptions.InvalidCredentialsException;
 import com.kunal.billingSoftware.io.AuthRequest;
 import com.kunal.billingSoftware.io.AuthResponse;
 import com.kunal.billingSoftware.service.UserService;
 import com.kunal.billingSoftware.service.impl.AppUserDetailsService;
 import com.kunal.billingSoftware.util.JwtUtil;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
@@ -16,7 +17,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Map;
 
@@ -31,7 +31,7 @@ public class AuthController {
     private final UserService userService;
 
     @PostMapping("/login")
-    public AuthResponse login (@RequestBody AuthRequest request) throws Exception  {
+    public AuthResponse login (@Valid  @RequestBody AuthRequest request) throws Exception  {
         authenticate(request.getEmail(), request.getPassword());
         final UserDetails userDetails = appUserDetailsService.loadUserByUsername(request.getEmail());
         final String jwtToken = jwtUtil.generateToken(userDetails);
@@ -49,7 +49,7 @@ public class AuthController {
             throw new Exception("User disabled");
         }
         catch (BadCredentialsException ex) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email or password is incorrect");
+            throw new InvalidCredentialsException("Invalid email or password");
         }
     }
 

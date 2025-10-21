@@ -1,8 +1,10 @@
 package com.kunal.billingSoftware.controller;
 
+import com.kunal.billingSoftware.exceptions.ResourceNotFoundException;
 import com.kunal.billingSoftware.io.UserRequest;
 import com.kunal.billingSoftware.io.UserResponse;
 import com.kunal.billingSoftware.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.User;
@@ -19,13 +21,8 @@ public class UserController {
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    public UserResponse registerUser(@RequestBody UserRequest request) {
-         try {
-             return userService.createUser(request);
-         }
-         catch (Exception ex) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Unable to create user. " + ex.getMessage());
-         }
+    public UserResponse registerUser(@Valid @RequestBody UserRequest request) {
+        return userService.createUser(request);
     }
 
     @GetMapping("/users")
@@ -40,7 +37,7 @@ public class UserController {
             userService.deleteUser(id);
         }
         catch (Exception ex) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User with ID: " + id + " not found");
+            throw new ResourceNotFoundException("User", "id", id);
         }
     }
 }

@@ -2,6 +2,7 @@ package com.kunal.billingSoftware.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kunal.billingSoftware.exceptions.ResourceNotFoundException;
 import com.kunal.billingSoftware.io.CategoryRequest;
 import com.kunal.billingSoftware.io.CategoryResponse;
 import com.kunal.billingSoftware.service.CategoryService;
@@ -18,6 +19,7 @@ import java.util.List;
 public class CategoryController {
 
     private final CategoryService categoryService;
+
     @PostMapping("/admin/categories")
     @ResponseStatus(HttpStatus.CREATED)
     public CategoryResponse addCategory(@RequestPart("category") String categoryString, @RequestPart("file") MultipartFile categoryImg) {
@@ -39,10 +41,6 @@ public class CategoryController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/admin/categories/{categoryId}")
     public void deleteCategory(@PathVariable String categoryId) {
-        try {
-            categoryService.delete(categoryId);
-        }catch (Exception ex) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage());
-        }
+        categoryService.delete(categoryId);
     }
 }

@@ -1,6 +1,7 @@
 package com.kunal.billingSoftware.service.impl;
 
 import com.kunal.billingSoftware.entity.UserEntity;
+import com.kunal.billingSoftware.exceptions.UserCreationException;
 import com.kunal.billingSoftware.io.UserRequest;
 import com.kunal.billingSoftware.io.UserResponse;
 import com.kunal.billingSoftware.repository.UserRepository;
@@ -23,9 +24,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponse createUser(UserRequest request) {
-        UserEntity newUser = convertToEntity(request);
-        newUser = userRepository.save(newUser);
-        return convertToResponse(newUser);
+        try {
+            UserEntity newUser = convertToEntity(request);
+            newUser = userRepository.save(newUser);
+            return convertToResponse(newUser);
+        } catch (Exception ex) {
+            throw new UserCreationException("Unable to create user. " + ex.getMessage());
+        }
     }
 
     private UserResponse convertToResponse(UserEntity newUser) {
