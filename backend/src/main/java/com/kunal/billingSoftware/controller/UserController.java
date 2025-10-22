@@ -33,11 +33,6 @@ public class UserController {
     @DeleteMapping("/users/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteUser(@PathVariable String id) {
-        try {
-            userService.deleteUser(id);
-        }
-        catch (Exception ex) {
-            throw new ResourceNotFoundException("User", "id", id);
-        }
+        userService.deleteUser(id);
     }
 }

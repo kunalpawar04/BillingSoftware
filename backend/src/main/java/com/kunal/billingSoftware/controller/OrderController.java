@@ -4,6 +4,7 @@ import com.kunal.billingSoftware.io.OrderFilterRequest;
 import com.kunal.billingSoftware.io.OrderRequest;
 import com.kunal.billingSoftware.io.OrderResponse;
 import com.kunal.billingSoftware.service.OrderService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +19,7 @@ public class OrderController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public OrderResponse createOrder(@RequestBody OrderRequest request) {
+    public OrderResponse createOrder(@Valid @RequestBody OrderRequest request) {
         return orderService.createOrder(request);
     }
 

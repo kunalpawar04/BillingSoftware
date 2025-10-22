@@ -4,6 +4,7 @@ import com.kunal.billingSoftware.io.*;
 import com.kunal.billingSoftware.service.OrderService;
 import com.kunal.billingSoftware.service.StripeService;
 import com.stripe.exception.StripeException;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +20,7 @@ public class PaymentController {
 
     @PostMapping("/create-checkout-session")
     @ResponseStatus(HttpStatus.CREATED)
-    public StripeCheckoutResponse createCheckoutSession(@RequestBody PaymentRequest request) {
+    public StripeCheckoutResponse createCheckoutSession(@Valid @RequestBody PaymentRequest request) {
         try {
             return stripeService.createCheckoutSession(request.getAmount(), request.getCurrency());
         } catch (StripeException e) {
