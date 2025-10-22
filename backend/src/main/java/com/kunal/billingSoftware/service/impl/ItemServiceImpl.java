@@ -2,6 +2,7 @@ package com.kunal.billingSoftware.service.impl;
 
 import com.kunal.billingSoftware.entity.CategoryEntity;
 import com.kunal.billingSoftware.entity.ItemEntity;
+import com.kunal.billingSoftware.exceptions.ResourceNotFoundException;
 import com.kunal.billingSoftware.io.ItemRequest;
 import com.kunal.billingSoftware.io.ItemResponse;
 import com.kunal.billingSoftware.repository.CategoryRepository;
@@ -31,7 +32,7 @@ public class ItemServiceImpl implements ItemService {
         String imageUrl = fileUploadService.uploadFile(file);
         ItemEntity newItem = convertToEntity(request);
         CategoryEntity category = categoryRepository.findByCategoryId(request.getCategoryId())
-                .orElseThrow(() -> new RuntimeException("Category with ID: " + request.getCategoryId() + " not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Category", "id", request.getCategoryId()));
         newItem.setCategory(category);
         newItem.setImgUrl(imageUrl);
         newItem = itemRepository.save(newItem);
@@ -73,7 +74,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public void deleteItem(String itemId) {
         ItemEntity item = itemRepository.findByItemId(itemId)
-                .orElseThrow(() -> new RuntimeException("Item with ID: " + itemId + " not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Item", "id", itemId));
         boolean isFileDeleted = fileUploadService.deleteFile(item.getImgUrl());
         itemRepository.delete(item);
     }

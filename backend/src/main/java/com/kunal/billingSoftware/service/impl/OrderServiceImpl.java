@@ -2,6 +2,7 @@ package com.kunal.billingSoftware.service.impl;
 
 import com.kunal.billingSoftware.entity.OrderEntity;
 import com.kunal.billingSoftware.entity.OrderItemEntity;
+import com.kunal.billingSoftware.exceptions.ResourceNotFoundException;
 import com.kunal.billingSoftware.io.*;
 import com.kunal.billingSoftware.repository.OrderEntityRepository;
 import com.kunal.billingSoftware.service.OrderService;
@@ -94,7 +95,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void deleteOrder(String orderId) {
         OrderEntity existingOrder = orderEntityRepository.findByOrderId(orderId)
-                .orElseThrow(() -> new RuntimeException("Order with ID:" + orderId+ " not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Order", "id",  orderId));
         orderEntityRepository.delete(existingOrder);
     }
 
@@ -121,7 +122,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderResponse verifyPayment(PaymentVerificationRequest request) {
         OrderEntity existingOrder = orderEntityRepository.findByOrderId(request.getOrderId())
-                .orElseThrow(() -> new RuntimeException("Order not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Order", "id", request.getOrderId()));
 
         try {
             // Fetch PaymentIntent from Stripe

@@ -1,13 +1,13 @@
 package com.kunal.billingSoftware.service.impl;
 
 import com.kunal.billingSoftware.entity.UserEntity;
+import com.kunal.billingSoftware.exceptions.ResourceNotFoundException;
 import com.kunal.billingSoftware.exceptions.UserCreationException;
 import com.kunal.billingSoftware.io.UserRequest;
 import com.kunal.billingSoftware.io.UserResponse;
 import com.kunal.billingSoftware.repository.UserRepository;
 import com.kunal.billingSoftware.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -57,7 +57,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public String getUserRole(String email) {
         UserEntity existingUser = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found for the email: " + email));
+                .orElseThrow(() -> new ResourceNotFoundException("User", "email", email));
         return existingUser.getRole();
     }
 
@@ -72,7 +72,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(String id) {
         UserEntity existingUser = userRepository.findByUserId(id)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found for the email: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("User", "id", id));
         userRepository.delete(existingUser);
     }
 }
