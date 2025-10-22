@@ -13,6 +13,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class UserRequest {
+
+    @NotBlank(message = "Name cannot be blank")
     private String name;
 
     @NotBlank(message = "Email is required")
