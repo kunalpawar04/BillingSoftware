@@ -41,7 +41,7 @@ public class SecurityConfig {
                         .requestMatchers("/login", "/encode", "/api/v1.0/login").permitAll()
 
                         // User + Admin endpoints
-                        .requestMatchers("/api/v1.0/category",
+                        .requestMatchers("/api/v1.0/categories",
                                 "/api/v1.0/items",
                                 "/api/v1.0/orders",
                                 "/api/v1.0/payments",
@@ -60,20 +60,6 @@ public class SecurityConfig {
 
         return http.build();
     }
-
-
-//    @Bean
-//    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-//        http.cors(Customizer.withDefaults())
-//                .csrf(AbstractHttpConfigurer::disable)
-//                .authorizeHttpRequests(auth -> auth
-//                        .requestMatchers("/login", "/encode", "/api/v1.0/login", "/api/v1.0/admin/register").permitAll()
-//                        .anyRequest().permitAll())  // Keep this as permitAll for now during testing
-//                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-//                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
-//
-//        return http.build();
-//    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
