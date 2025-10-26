@@ -5,6 +5,7 @@ import com.kunal.billingSoftware.exceptions.ResourceNotFoundException;
 import com.kunal.billingSoftware.exceptions.UserCreationException;
 import com.kunal.billingSoftware.io.UserRequest;
 import com.kunal.billingSoftware.io.UserResponse;
+import com.kunal.billingSoftware.projection.UserProjection;
 import com.kunal.billingSoftware.repository.UserRepository;
 import com.kunal.billingSoftware.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -74,5 +75,10 @@ public class UserServiceImpl implements UserService {
         UserEntity existingUser = userRepository.findByUserId(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", id));
         userRepository.delete(existingUser);
+    }
+
+    @Override
+    public List<UserProjection> getAllUsersBasicInfo() {
+        return userRepository.findAllProjectedBy();
     }
 }

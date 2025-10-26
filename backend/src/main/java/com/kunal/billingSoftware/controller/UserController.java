@@ -3,6 +3,7 @@ package com.kunal.billingSoftware.controller;
 import com.kunal.billingSoftware.exceptions.ResourceNotFoundException;
 import com.kunal.billingSoftware.io.UserRequest;
 import com.kunal.billingSoftware.io.UserResponse;
+import com.kunal.billingSoftware.projection.UserProjection;
 import com.kunal.billingSoftware.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -34,5 +35,10 @@ public class UserController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteUser(@PathVariable String id) {
         userService.deleteUser(id);
+    }
+
+    @GetMapping("/users/basic-info")
+    public List<UserProjection> getUsersBasicInfo() {
+        return userService.getAllUsersBasicInfo();
     }
 }
