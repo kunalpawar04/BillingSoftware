@@ -1,0 +1,257 @@
+databaseChangeLog:
+- changeSet:
+    id: 1761328147128-1
+    author: kunal_pawar (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: id
+            type: BIGINT
+        - column:
+            name: bg_color
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              unique: true
+            name: category_id
+            type: VARCHAR(255)
+        - column:
+            name: created_at
+            type: datetime(6)
+        - column:
+            name: description
+            type: VARCHAR(255)
+        - column:
+            name: image_url
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              unique: true
+            name: name
+            type: VARCHAR(255)
+        - column:
+            name: updated_at
+            type: datetime(6)
+        tableName: tbl_category
+- changeSet:
+    id: 1761328147128-2
+    author: kunal_pawar (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: id
+            type: BIGINT
+        - column:
+            name: created_at
+            type: datetime(6)
+        - column:
+            name: description
+            type: VARCHAR(255)
+        - column:
+            name: img_url
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              unique: true
+            name: item_id
+            type: VARCHAR(255)
+        - column:
+            name: name
+            type: VARCHAR(255)
+        - column:
+            name: price
+            type: DECIMAL(38, 2)
+        - column:
+            name: updated_at
+            type: datetime(6)
+        - column:
+            name: category_id
+            type: BIGINT
+        tableName: tbl_items
+- changeSet:
+    id: 1761328147128-3
+    author: kunal_pawar (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: id
+            type: BIGINT
+        - column:
+            name: item_id
+            type: VARCHAR(255)
+        - column:
+            name: name
+            type: VARCHAR(255)
+        - column:
+            name: price
+            type: DOUBLE
+        - column:
+            name: quantity
+            type: INT
+        - column:
+            name: order_id
+            type: BIGINT
+        tableName: tbl_order_items
+- changeSet:
+    id: 1761328147128-4
+    author: kunal_pawar (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: id
+            type: BIGINT
+        - column:
+            name: created_at
+            type: datetime(6)
+        - column:
+            name: customer_name
+            type: VARCHAR(255)
+        - column:
+            name: grand_total
+            type: DOUBLE
+        - column:
+            name: order_id
+            type: VARCHAR(255)
+        - column:
+            name: status
+            type: TINYINT(3)
+        - column:
+            name: stripe_payment_intent_id
+            type: VARCHAR(255)
+        - column:
+            name: stripe_payment_method_id
+            type: VARCHAR(255)
+        - column:
+            name: payment_method
+            type: ENUM('CASH', 'UPI')
+        - column:
+            name: phone_number
+            type: VARCHAR(255)
+        - column:
+            name: subtotal
+            type: DOUBLE
+        - column:
+            name: tax
+            type: DOUBLE
+        tableName: tbl_orders
+- changeSet:
+    id: 1761328147128-5
+    author: kunal_pawar (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: id
+            type: BIGINT
+        - column:
+            name: created_at
+            type: datetime(6)
+        - column:
+            name: email
+            type: VARCHAR(255)
+        - column:
+            name: name
+            type: VARCHAR(255)
+        - column:
+            name: password
+            type: VARCHAR(255)
+        - column:
+            name: role
+            type: VARCHAR(255)
+        - column:
+            name: updated_at
+            type: datetime(6)
+        - column:
+            constraints:
+              unique: true
+            name: user_id
+            type: VARCHAR(255)
+        tableName: tbl_users
+- changeSet:
+    id: 1761328147128-6
+    author: kunal_pawar (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            name: next_val
+            type: BIGINT
+        tableName: tbl_users_seq
+- changeSet:
+    id: 1761328147128-7
+    author: kunal_pawar (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: order_id
+        indexName: FKi5qvuwu0gqfww50julf2kq3d7
+        tableName: tbl_order_items
+- changeSet:
+    id: 1761328147128-8
+    author: kunal_pawar (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: category_id
+        indexName: FKrxxi38a9m21eltievg2qhhk2n
+        tableName: tbl_items
+- changeSet:
+    id: 1761328147128-9
+    author: kunal_pawar (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: order_id
+        baseTableName: tbl_order_items
+        constraintName: FKi5qvuwu0gqfww50julf2kq3d7
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: tbl_orders
+        validate: true
+- changeSet:
+    id: 1761328147128-10
+    author: kunal_pawar (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: category_id
+        baseTableName: tbl_items
+        constraintName: FKrxxi38a9m21eltievg2qhhk2n
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: tbl_category
+        validate: true
+- include:
+    file: db/changelog/changes/20251025-add-price-check.yaml
