@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20251025-1-add-price-check
+      author: kunal_pawar
+      comment: "Add CHECK constraint to ensure price >= 0 in tbl_items"
+      changes:
+        - sql: >
+            ALTER TABLE tbl_items
+            ADD CONSTRAINT chk_price_non_negative
+            CHECK (price >= 0);
+      rollback:
+        - sql: >
+            ALTER TABLE tbl_items
+            DROP CHECK chk_price_non_negative;
