@@ -1,5 +1,7 @@
 package com.kunal.billingSoftware.controller;
 
+import com.kunal.billingSoftware.exceptions.ResourceNotFoundException;
+import com.kunal.billingSoftware.exceptions.UserCreationException;
 import com.kunal.billingSoftware.io.UserRequest;
 import com.kunal.billingSoftware.io.UserResponse;
 import com.kunal.billingSoftware.service.UserService;
@@ -80,14 +82,14 @@ class UserControllerTest {
     @Test
     void testRegisterUser_ShouldReturnBadRequest_WhenServiceThrowsException() throws Exception {
         when(userService.createUser(any(UserRequest.class)))
-                .thenThrow(new RuntimeException("Email already exists"));
+                .thenThrow(new UserCreationException("Unable to create user. "));
 
         mockMvc.perform(post("/admin/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(userRequest)))
                 .andExpect(status().isBadRequest())
-                .andExpect(result -> assertTrue(result.getResolvedException() instanceof ResponseStatusException))
-                .andExpect(result -> assertTrue(result.getResolvedException().getMessage().contains("Unable to create user")));
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof UserCreationException))
+                .andExpect(result -> assertTrue(result.getResolvedException().getMessage().contains("Unable to create user. ")));
 
         verify(userService, times(1)).createUser(any(UserRequest.class));
     }
@@ -122,14 +124,14 @@ class UserControllerTest {
     @Test
     void testDeleteUser_ShouldReturnNotFound_WhenUserDoesNotExist() throws Exception {
         String invalidUserId = "invalid-123";
-        doThrow(new RuntimeException("User not found"))
+        doThrow(new ResourceNotFoundException("User", "id", invalidUserId))
                 .when(userService).deleteUser(invalidUserId);
 
         mockMvc.perform(delete("/admin/users/{id}", invalidUserId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
-                .andExpect(result -> assertTrue(result.getResolvedException() instanceof ResponseStatusException))
-                .andExpect(result -> assertTrue(result.getResolvedException().getMessage().contains("User with ID:")));
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof ResourceNotFoundException))
+                .andExpect(result -> assertTrue(result.getResolvedException().getMessage().contains("User not found with id: ")));
 
         verify(userService, times(1)).deleteUser(invalidUserId);
     }

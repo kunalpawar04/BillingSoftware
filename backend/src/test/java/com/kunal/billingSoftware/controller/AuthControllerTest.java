@@ -1,5 +1,6 @@
 package com.kunal.billingSoftware.controller;
 
+import com.kunal.billingSoftware.exceptions.InvalidCredentialsException;
 import com.kunal.billingSoftware.io.AuthRequest;
 import com.kunal.billingSoftware.service.UserService;
 import com.kunal.billingSoftware.service.impl.AppUserDetailsService;
@@ -112,10 +113,10 @@ class AuthControllerTest {
                             """))
                 .andExpect(status().isBadRequest()) // Expect 400 for bad credentials
                 .andExpect(result ->
-                        assertTrue(result.getResolvedException() instanceof ResponseStatusException))
+                        assertTrue(result.getResolvedException() instanceof InvalidCredentialsException))
                 .andExpect(result ->
-                        assertEquals("Email or password is incorrect",
-                                ((ResponseStatusException) result.getResolvedException()).getReason()));
+                        assertEquals("Invalid email or password",
+                                result.getResolvedException().getMessage()));
 
         // Verify
         verify(authenticationManager, times(1))

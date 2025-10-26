@@ -130,7 +130,7 @@ class CategoryServiceImplTest {
         // Act + Assert
         RuntimeException exception = assertThrows(RuntimeException.class, () -> categoryService.delete(categoryId));
 
-        assertEquals(("Category with ID: " + categoryId + " does not exist"), exception.getMessage());
+        assertEquals(("Category not found with id: " + categoryId), exception.getMessage());
 
         // Checking if method is never called
         verify(fileUploadService, never()).deleteFile(anyString());

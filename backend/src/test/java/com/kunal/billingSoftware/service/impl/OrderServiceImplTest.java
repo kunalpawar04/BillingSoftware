@@ -122,7 +122,7 @@ class OrderServiceImplTest {
         RuntimeException exception = assertThrows(RuntimeException.class, () -> orderService.deleteOrder(missingId));
 
         // Assert + Verify
-        assertEquals("Order with ID:" + missingId+ " not found", exception.getMessage());
+        assertEquals("Order not found with id: " + missingId, exception.getMessage());
 
         verify(orderEntityRepository, times(1)).findByOrderId(missingId);
         verify(orderEntityRepository, never()).delete(order);

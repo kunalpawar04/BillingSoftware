@@ -1,5 +1,6 @@
 package com.kunal.billingSoftware.controller;
 
+import com.kunal.billingSoftware.exceptions.ResourceNotFoundException;
 import com.kunal.billingSoftware.io.CategoryRequest;
 import com.kunal.billingSoftware.io.CategoryResponse;
 import com.kunal.billingSoftware.service.CategoryService;
@@ -168,7 +169,7 @@ class CategoryControllerTest {
     @Test
     void testDeleteCategory_ShouldReturnException_WhenCategoryIdDoesNotExist() throws Exception {
         // Arrange
-        doThrow(ResponseStatusException.class)
+        doThrow(ResourceNotFoundException.class)
                 .when(categoryService)
                 .delete(anyString());
 
@@ -176,6 +177,6 @@ class CategoryControllerTest {
         mockMvc.perform(delete("/admin/categories/{categoryId}", "invalid-id")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
-                .andExpect(result -> assertTrue(result.getResolvedException() instanceof ResponseStatusException));
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof ResourceNotFoundException));
     }
 }

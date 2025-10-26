@@ -114,7 +114,7 @@ class ItemServiceImplTest {
         System.out.println(runtimeException.getMessage());
 
         // Verify
-        assertEquals(runtimeException.getMessage(), "Category with ID: " + category.getCategoryId() + " not found");
+        assertEquals(runtimeException.getMessage(), "Category not found with id: " + category.getCategoryId());
         verify(fileUploadService, times(1)).uploadFile(file);
         verify(categoryRepository, times(1)).findByCategoryId(anyString());
         verify(itemRepository, times(0)).save(any(ItemEntity.class));
@@ -183,7 +183,7 @@ class ItemServiceImplTest {
         RuntimeException exception = assertThrows(RuntimeException.class, () -> itemService.deleteItem(invalidItemId));
 
         // Assert
-        assertEquals("Item with ID: " + invalidItemId + " not found", exception.getMessage());
+        assertEquals("Item not found with id: " + invalidItemId, exception.getMessage());
 
         // Verify
         verify(itemRepository, times(1)).findByItemId(anyString());

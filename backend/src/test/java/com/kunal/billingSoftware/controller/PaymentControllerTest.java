@@ -6,6 +6,7 @@ import com.kunal.billingSoftware.service.OrderService;
 import com.kunal.billingSoftware.service.StripeService;
 import com.kunal.billingSoftware.service.impl.AppUserDetailsService;
 import com.kunal.billingSoftware.util.JwtUtil;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -74,7 +75,8 @@ class PaymentControllerTest {
                     .build())
             .build();
 
-    {
+    @BeforeEach
+    void setUp() {
         mockStripeResponse.setSessionId("sess_abc123");
         mockStripeResponse.setUrl("https://checkout.stripe.com/pay/sess_abc123");
     }
@@ -83,9 +85,9 @@ class PaymentControllerTest {
     void testCreateCheckoutSession_ShouldReturnStripeResponse_WhenValidRequest() throws Exception {
         PaymentRequest paymentRequest = new PaymentRequest();
         paymentRequest.setAmount(1000.0);
-        paymentRequest.setCurrency("usd");
+        paymentRequest.setCurrency("USD");
 
-        when(stripeService.createCheckoutSession(eq(1000.0), eq("usd"))).thenReturn(mockStripeResponse);
+        when(stripeService.createCheckoutSession(eq(1000.0), eq("USD"))).thenReturn(mockStripeResponse);
 
         mockMvc.perform(post("/payments/create-checkout-session")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -94,7 +96,7 @@ class PaymentControllerTest {
                 .andExpect(jsonPath("$.sessionId").value("sess_abc123"))
                 .andExpect(jsonPath("$.url").value("https://checkout.stripe.com/pay/sess_abc123"));
 
-        verify(stripeService, times(1)).createCheckoutSession(eq(1000.0), eq("usd"));
+        verify(stripeService, times(1)).createCheckoutSession(eq(1000.0), eq("USD"));
     }
 
     @Test
@@ -121,7 +123,7 @@ class PaymentControllerTest {
     void testCreateCheckoutSession_ShouldReturnServerError_WhenStripeThrowsException() throws Exception {
         PaymentRequest request = new PaymentRequest();
         request.setAmount(2000.0);
-        request.setCurrency("usd");
+        request.setCurrency("USD");
 
         ApiException apiException = new ApiException(
                 "Stripe API error",

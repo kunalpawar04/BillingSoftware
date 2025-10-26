@@ -22,8 +22,7 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -109,8 +108,9 @@ class ItemControllerTest {
                 .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isBadRequest())
                 .andExpect(response -> assertTrue(response.getResolvedException() instanceof ResponseStatusException))
-                .andExpect(response -> assertTrue(
-                        response.getResolvedException().getMessage().equals("Error occured while processing the json")
+                .andExpect(response -> assertEquals(
+                        "Error occurred while processing the JSON",
+                        ((ResponseStatusException) response.getResolvedException()).getReason()
                 ));
     }
 

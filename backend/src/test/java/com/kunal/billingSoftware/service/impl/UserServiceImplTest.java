@@ -1,6 +1,7 @@
 package com.kunal.billingSoftware.service.impl;
 
 import com.kunal.billingSoftware.entity.UserEntity;
+import com.kunal.billingSoftware.exceptions.ResourceNotFoundException;
 import com.kunal.billingSoftware.io.UserRequest;
 import com.kunal.billingSoftware.io.UserResponse;
 import com.kunal.billingSoftware.repository.UserRepository;
@@ -123,12 +124,12 @@ class UserServiceImplTest {
         when(userRepository.findByEmail(email)).thenReturn(Optional.empty());
 
         // Act + Assert
-        UsernameNotFoundException exception = assertThrows(
-                UsernameNotFoundException.class,
+        ResourceNotFoundException exception = assertThrows(
+                ResourceNotFoundException.class,
                 () -> userService.getUserRole(email)
         );
 
-        assertEquals("User not found for the email: " + email, exception.getMessage());
+        assertEquals("User not found with email: " + email, exception.getMessage());
         verify(userRepository).findByEmail(email); // optional but good practice
     }
 
@@ -184,10 +185,10 @@ class UserServiceImplTest {
         when(userRepository.findByUserId(userId)).thenReturn(Optional.empty());
 
         // Act + Assert
-        UsernameNotFoundException exception = assertThrows(UsernameNotFoundException.class, () -> userService.deleteUser(userId));
+        ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () -> userService.deleteUser(userId));
 
         // Verify
-        assertEquals("User not found for the email: " + userId, exception.getMessage());
+        assertEquals("User not found with id: " + userId, exception.getMessage());
         verify(userRepository, never()).delete(any());
     }
 }
